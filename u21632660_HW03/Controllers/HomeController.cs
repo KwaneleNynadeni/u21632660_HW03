@@ -22,34 +22,13 @@ namespace u21632660_HW03.Controllers
     public class HomeController : Controller
     {
         public LibraryEntities db_Library = new LibraryEntities();
-        public async Task<ActionResult> Index(string filterstring, string filterbooks, string sortOrder, string currentFilter, int? page, int? pageBooks, string sortOrderbooks, string currentFilterbooks)
+        public async Task<ActionResult> Index()
         {
             int pageSize = 15;
-            int pageNumber = (page ?? 1);
+            int pageSizeBooks = 10;
+            int pageNumber = (Request.QueryString["page1"] != null) ? int.Parse(Request.QueryString["page1"]) : 1;
+            int pageNumberBooks = (Request.QueryString["page2"] != null) ? int.Parse(Request.QueryString["page2"]) : 1;
 
-            int pageSizeBooks = 15;
-            int pageNumberBooks = (pageBooks ?? 1);
-
-            ViewBag.CurrentSort = sortOrder;
-            ViewBag.SortOrderBooks = sortOrderbooks;
-            //
-            if (filterstring != null)
-            {
-                page = 1;
-            }
-            else
-            {
-                filterstring = currentFilter;
-            }
-
-            if (filterbooks != null)
-            {
-                pageBooks = 1;
-            }
-            else
-            {
-                filterbooks = currentFilterbooks;
-            }
 
             var student = await db_Library.students.ToListAsync();
             var borrow = await db_Library.borrows.ToListAsync();
@@ -60,19 +39,39 @@ namespace u21632660_HW03.Controllers
             var LibDetails = new LibraryVM();
 
             LibDetails.Students = student.ToList().OrderByDescending(i => i.studentId).ToPagedList(pageNumber,pageSize);
-            LibDetails.Borrows = borrow;
+            LibDetails.BorrowsList = borrow;
             LibDetails.Books = book.ToList().OrderByDescending(i => i.bookId).ToPagedList(pageNumberBooks,pageSizeBooks);
-            LibDetails.Authors = author;
-            LibDetails.BookTypes = type;
-
-            ViewBag.CurrentFilter = filterstring;
-            ViewBag.CurrentFilterbooks = filterbooks;
+            LibDetails.AuthorsList = author;
+            LibDetails.BookTypesList = type;
 
             return View(LibDetails);
         }
-        public ActionResult Maintain()
+        public async Task<ActionResult> Maintain()
         {
-            return View();
+            int pageSize = 10;
+            int pageSizeTypes= 10;
+            int pageSizeBorrows = 10;
+            int pageNumber = (Request.QueryString["pageAuthors"] != null) ? int.Parse(Request.QueryString["pageAuthors"]) : 1;
+            int pageNumberTypes = (Request.QueryString["pageTypes"] != null) ? int.Parse(Request.QueryString["pageTypes"]) : 1;
+            int pageNumberBorrows = (Request.QueryString["pageBorrows"] != null) ? int.Parse(Request.QueryString["pageBorrows"]) : 1;
+
+
+
+            var student = await db_Library.students.ToListAsync();
+            var borrow = await db_Library.borrows.ToListAsync();
+            var book = await db_Library.books.ToListAsync(); ;
+            var author = await db_Library.authors.ToListAsync();
+            var type = await db_Library.types.ToListAsync();
+
+            var LibDetails = new LibraryVM();
+
+            LibDetails.StudentsList = student;
+            LibDetails.Borrows = borrow.ToPagedList(pageNumberBorrows, pageSizeBorrows);
+            LibDetails.BooksList = book;
+            LibDetails.Authors = author.ToPagedList(pageNumber, pageSize); ;
+            LibDetails.BookTypes= type.ToPagedList(pageNumberTypes, pageSizeTypes); ;
+
+            return View(LibDetails);
         }
 
         public ActionResult Report()

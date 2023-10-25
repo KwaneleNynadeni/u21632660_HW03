@@ -44,9 +44,8 @@
                 }
             </tbody>
         </table>
-        Page @(Model.Students.PageCount < Model.Students.PageNumber ? 0 : Model.Students.PageNumber) of @Model.Books.PageCount
-
-        @Html.PagedListPager(Model.Students, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+        Page @(Model.Students.PageCount < Model.Students.PageNumber ? 0 : Model.Students.PageNumber) of @Model.Students.PageCount
+        @Html.PagedListPager(Model.Students, page => Url.Action("Index", new { page, page1 = page }))
     </div>
 
     <div class="col-sm-6">
@@ -68,35 +67,36 @@
             <tbody>
                 @foreach (var book in books)
                 {
+                    var borrowExists = borrows.Where(br => br.bookId == book.bookId).ToList();
                     var borrowedBook = borrows.Where(br => br.bookId == book.bookId && br.broughtDate == null).ToList();
-                    <tr>
-                        <td>@book.name</td>
-                        <td>@book.pagecount</td>
-                        <td>@book.point</td>
-                        @foreach (var auth in authors.Where(a => a.authorId == book.authorId))
-                        {
-                            <td> @auth.name  @auth.surname</td>
-                        }
-                        @foreach (var type in types.Where(t => t.typeId == book.typeId))
-                        {
-                            <td> @type.name</td>
-                        }
-                         
-                        @if(borrowedBook == null) 
-                        { 
-                            <td style="color: green">Available</td>
-                        }
-                        else
-                        {
-                            <td style="color: red">Out</td>
-                        }
-                        
-                    </tr>
+                <tr>
+                    <td>@book.name</td>
+                    <td>@book.pagecount</td>
+                    <td>@book.point</td>
+                    @foreach (var auth in authors.Where(a => a.authorId == book.authorId))
+                    {
+                        <td> @auth.name  @auth.surname</td>
+                    }
+                    @foreach (var type in types.Where(t => t.typeId == book.typeId))
+                    {
+                        <td> @type.name</td>
+                    }
+
+                    @if (borrowExists == null || borrowExists.Count <1)
+                    {
+                      <td style="color: green">Available</td>
+                    }
+                    else
+                    {
+                        <td style="color: red">Out</td>
+                    }
+
+                </tr>
                 }
             </tbody>
         </table>
         Page @(Model.Books.PageCount < Model.Books.PageNumber ? 0 : Model.Books.PageNumber) of @Model.Books.PageCount
-        @Html.PagedListPager(Model.Books, pagebook => Url.Action("Index", new { pagebook, sortOrderbooks = ViewBag.SortOrderBooks, currentFilterbooks = ViewBag.CurrentFilterbooks }))
+        @Html.PagedListPager(Model.Books, pagebook => Url.Action("Index", new { pagebook, page2 = pagebook }))
     </div>
 </div>
 

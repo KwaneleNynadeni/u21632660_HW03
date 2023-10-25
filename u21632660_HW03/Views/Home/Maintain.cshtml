@@ -1,7 +1,114 @@
-﻿
+﻿@model u21632660_HW03.Models.LibraryVM
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Maintain";
+    var students = Model.StudentsList;
+    var books = Model.BooksList;
+    var types = Model.BookTypes;
+    var borrows = Model.Borrows;
+    var authors = Model.Authors;
 }
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 <h2>Maintain</h2>
 
+<div class="row">
+    <div class="col-sm-6">
+        <div class="row">
+            <div class="col-sm-6"><h5>Authors</h5></div>
+            <div class="col-sm-6"><button type="button" class="btn btn-sm btn-outline-success float-right" data-target="#createAuthor" data-toggle="modal">Create</button></div>
+        </div>
+        <table class="table table-sm table-striped" style="font-size: 13px;">
+            <thead class="bg-primary text-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var author in authors)
+                { 
+                    <tr>
+                        <td>@author.name</td>
+                        <td>@author.surname</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary">Edit</button>
+                            <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        Page @(Model.Authors.PageCount < Model.Authors.PageNumber ? 0 : Model.Authors.PageNumber) of @Model.Authors.PageCount
+        @Html.PagedListPager(Model.Authors, page => Url.Action("Maintain", new { page, pageAuthors = page }))
+    </div>
+    <div class="col-sm-6">
+        <div class="row">
+            <div class="col-sm-6"><h5>Types</h5></div>
+            <div class="col-sm-6"><button type="button" class="btn btn-sm btn-outline-success float-right" data-target="#createType" data-toggle="modal">Create</button></div>
+        </div>
+        <table class="table table-sm table-striped" style="font-size: 13px;">
+            <thead class="bg-primary text-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var type in types) { 
+                    <tr>
+                        <td>@type.name</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary">Edit</button>
+                            <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        Page @(Model.BookTypes.PageCount < Model.BookTypes.PageNumber ? 0 : Model.BookTypes.PageNumber) of @Model.BookTypes.PageCount
+        @Html.PagedListPager(Model.BookTypes, page => Url.Action("Maintain", new { page, pageTypes = page }))
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-6"><h5>Borrows</h5></div>
+            <div class="col-sm-6"><button type="button" class="btn btn-sm btn-outline-success float-right" data-target="#createBorrow" data-toggle="modal">Create</button></div>
+        </div>
+        <table class="table table-sm table-striped" style="font-size: 13px;">
+            <thead class="bg-primary text-light">
+                <tr>
+                    <th>Student</th>
+                    <th>Book name</th>
+                    <th>Date out</th>
+                    <th>Date In</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var borrow in borrows)
+                {
+                    <tr>
+                        @foreach (var stu in students.Where(stud => stud.studentId == borrow.studentId)) { <td>@stu.name @stu.surname</td>}
+                        @foreach (var book in books.Where(bk => bk.bookId == borrow.bookId)) { <td>@book.name </td>}
+                        <td>@borrow.takenDate</td>
+                        @if(borrow.broughtDate == null) { 
+                            <td>@borrow.broughtDate</td>
+                        }
+                        else { 
+                            <td style="color: red">Not Returned</td>
+                        }
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary">Edit</button>
+                            <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        Page @(Model.Borrows.PageCount < Model.Borrows.PageNumber ? 0 : Model.Borrows.PageNumber) of @Model.Borrows.PageCount
+        @Html.PagedListPager(Model.Borrows, page => Url.Action("Maintain", new { page, pageBorrows = page }))
+    </div> 
+</div>
