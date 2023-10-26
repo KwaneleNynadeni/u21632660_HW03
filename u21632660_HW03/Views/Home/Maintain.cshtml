@@ -27,14 +27,14 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var author in authors)
-                { 
+                @foreach (var author in authors)
+                {
                     <tr>
                         <td>@author.name</td>
                         <td>@author.surname</td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-primary">Edit</button>
-                            <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                            <button type="button" class="btn btn-sm btn-primary" name="/Library/AuthorEditor?authorId=@author.authorId" onclick="editDel(this.name)">Edit</button>
+                            <button type="button" class="btn btn-sm btn-danger" name="/Library/AuthorDel?authorId=@author.authorId">Delete</button>
                         </td>
                     </tr>
                 }
@@ -56,11 +56,12 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var type in types) { 
+                @foreach (var type in types)
+                {
                     <tr>
                         <td>@type.name</td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-primary">Edit</button>
+                            <button type="button" class="btn btn-sm btn-primary" name="/Library/TypeEditor?typeId=@type.typeId" onclick="editDel(this.name)">Edit</button>
                             <button type="button" class="btn btn-sm btn-danger">Delete</button>
                         </td>
                     </tr>
@@ -88,20 +89,28 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var borrow in borrows)
+                @foreach (var borrow in borrows)
                 {
                     <tr>
-                        @foreach (var stu in students.Where(stud => stud.studentId == borrow.studentId)) { <td>@stu.name @stu.surname</td>}
-                        @foreach (var book in books.Where(bk => bk.bookId == borrow.bookId)) { <td>@book.name </td>}
+                        @foreach (var stu in students.Where(stud => stud.studentId == borrow.studentId))
+                        {
+                            <td>@stu.name @stu.surname</td>
+                        }
+                        @foreach (var book in books.Where(bk => bk.bookId == borrow.bookId))
+                        {
+                            <td>@book.name </td>
+                        }
                         <td>@borrow.takenDate</td>
-                        @if(borrow.broughtDate == null) { 
+                        @if (borrow.broughtDate != null)
+                        {
                             <td>@borrow.broughtDate</td>
                         }
-                        else { 
+                        else
+                        {
                             <td style="color: red">Not Returned</td>
                         }
                         <td>
-                            <button type="button" class="btn btn-sm btn-primary">Edit</button>
+                            <button type="button" class="btn btn-sm btn-primary" name="/Library/BorrowEditor?borrowId=@borrow.borrowId" onclick="editDel(this.name)">Edit</button>
                             <button type="button" class="btn btn-sm btn-danger">Delete</button>
                         </td>
                     </tr>
@@ -110,5 +119,137 @@
         </table>
         Page @(Model.Borrows.PageCount < Model.Borrows.PageNumber ? 0 : Model.Borrows.PageNumber) of @Model.Borrows.PageCount
         @Html.PagedListPager(Model.Borrows, page => Url.Action("Maintain", new { page, pageBorrows = page }))
-    </div> 
+    </div>
 </div>
+
+<!--Create author Modal -->
+<div class="modal fade" id="createAuthor" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="authorModalLongTitle">Create Author</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("CreatAuthor", "Home", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <h5>Author details</h5>
+
+                    <div class="form-group">
+                        <label for="">Name</label>
+                        <input type="text" class="form-control form-control-sm" name="name" placeholder="Name..." required />
+                    </div>
+                    <div class="form-group">
+                        <label for="">Surname</label>
+                        <input type="text" class="form-control form-control-sm" name="surname" placeholder="Surname..." required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-success">Create</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--Create type Modal -->
+<div class="modal fade" id="createType" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="typeModalLongTitle">Create Type</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("CreatType", "Home", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <h5>Type details</h5>
+
+                    <div class="form-group">
+                        <label for="">Type Name</label>
+                        <input type="text" class="form-control form-control-sm" name="name" placeholder="Name..." required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-success">Create</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!--Create Borrow Modal -->
+<div class="modal fade" id="createBorrow" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="borrowModalLongTitle">Create Borrow</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("CreatBorrow", "Home", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <h5>Borrow details</h5>
+                    <div>
+                        <label for="">Student</label>
+                        <select class="form-control form-control-sm" name="student">
+                            @foreach (var student in students)
+                            {
+                                <option value="@student.studentId">@student.name @student.surname</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label for="">Book</label>
+                        <select class="form-control form-control-sm" name="book">
+                            @foreach (var book in books)
+                            {
+                                <option value="@book.bookId">@book.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-success">Create</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!--Create author Modal -->
+<div class="modal fade" id="editDelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="authorModalLongTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="editDelBody">
+                    
+            </div>        
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function editDel(myurl) {
+        $('#editDelModal').on('show.bs.modal', function (e) {
+            var target = $(e.relatedTarget);
+            var url = target.data('url');
+            $("#editDelBody").load(myurl);
+        });
+        $('#editDelModal').modal("show");
+    }
+</script>

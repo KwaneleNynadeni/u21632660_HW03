@@ -66,10 +66,10 @@ namespace u21632660_HW03.Controllers
             var LibDetails = new LibraryVM();
 
             LibDetails.StudentsList = student;
-            LibDetails.Borrows = borrow.ToPagedList(pageNumberBorrows, pageSizeBorrows);
+            LibDetails.Borrows = borrow.OrderByDescending(b => b.borrowId).ToPagedList(pageNumberBorrows, pageSizeBorrows);
             LibDetails.BooksList = book;
-            LibDetails.Authors = author.ToPagedList(pageNumber, pageSize); ;
-            LibDetails.BookTypes= type.ToPagedList(pageNumberTypes, pageSizeTypes); ;
+            LibDetails.Authors = author.OrderByDescending(a => a.authorId).ToPagedList(pageNumber, pageSize); ;
+            LibDetails.BookTypes= type.OrderByDescending(t => t.typeId).ToPagedList(pageNumberTypes, pageSizeTypes); ;
 
             return View(LibDetails);
         }
@@ -121,6 +121,66 @@ namespace u21632660_HW03.Controllers
             catch (Exception)
             {
                 return RedirectToAction("Index");
+            }
+        }
+
+        public async Task<ActionResult> CreatAuthor(string name, string surname)
+        {
+            try
+            {
+                db_Library.authors.Add(new author
+                {
+                    name = name,
+                    surname = surname,
+                   
+                });
+
+                await db_Library.SaveChangesAsync();
+                return RedirectToAction("Maintain");
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Maintain");
+            }
+        }
+        public async Task<ActionResult> CreatType(string name)
+        {
+            try
+            {
+                db_Library.types.Add(new type
+                {
+                    name = name,         
+                });
+
+                await db_Library.SaveChangesAsync();
+                return RedirectToAction("Maintain");
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Maintain");
+            }
+        }
+        public async Task<ActionResult> CreatBorrow(int? student, int? book)
+        {
+            var date = DateTime.Now;
+            var stringDate = date.ToString("yyyy-mm-dd hh:mm:ss");
+
+            try
+            {
+                db_Library.borrows.Add(new borrow
+                {
+                    studentId = student,
+                    bookId = book,
+                    takenDate = Convert.ToDateTime(stringDate),
+                    broughtDate = null
+                });
+
+                await db_Library.SaveChangesAsync();
+                return RedirectToAction("Maintain");
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Maintain");
             }
         }
     }

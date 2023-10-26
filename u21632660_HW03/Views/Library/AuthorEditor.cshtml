@@ -1,0 +1,27 @@
+﻿@model u21632660_HW03.Models.LibraryVM
+@{
+    ViewBag.Title = "AuthorEditor";
+    var author = Model.AuthorsList[0];
+}
+
+<div class="card">
+    @using (Html.BeginForm("EditAuthor", "Library", FormMethod.Post))
+    {
+        <div class="card-body">
+            <h5>Author to Edit </h5>
+            <input hidden type="number" name="authorId" value="@author.authorId"/>
+            <div class="form-group">
+                <label for="">Name</label>
+                <input type="text" class="form-control form-control-sm" name="name" value="@author.name" required />
+            </div>
+            <div class="form-group">
+                <label for="">Surname</label>
+                <input type="text" class="form-control form-control-sm" name="surname" value="@author.surname" required />
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="/Home/Maintain" class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</a>
+            <button type="submit" class="btn btn-sm btn-success">Save</button>
+        </div>
+    }
+</div>

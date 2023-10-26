@@ -1,0 +1,24 @@
+﻿@model u21632660_HW03.Models.LibraryVM
+@{
+    ViewBag.Title = "TypeEditor";
+    var type = Model.BookTypesList[0];
+}
+
+<div class="card">
+    @using (Html.BeginForm("EditType", "Library", FormMethod.Post))
+    {
+        <div class="card-body">
+            <h5>Type details</h5>
+            <input hidden type="number" name="typeId" value="@type.typeId"/>
+            <div class="form-group">
+                <label for="">Type Name</label>
+                <input type="text" class="form-control form-control-sm" name="name" value="@type.name" required />
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="/Home/Maintain" class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</a>
+            <button type="submit" class="btn btn-sm btn-success">Save</button>
+        </div>
+    }
+</div>
+
