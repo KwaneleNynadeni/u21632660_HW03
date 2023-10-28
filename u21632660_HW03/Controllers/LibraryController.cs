@@ -58,6 +58,41 @@ namespace u21632660_HW03.Controllers
             return View(LibDetails);
         }
 
+        //Async Delte actions that return views
+        public async Task<ActionResult> AuthorDeleter(int authorId)
+        {
+            var author = await db_Library.authors.ToListAsync();
+            var LibDetails = new LibraryVM();
+
+            LibDetails.AuthorsList = author.Where(aut => aut.authorId == authorId).ToList();
+
+            return View(LibDetails);
+        }
+
+        public async Task<ActionResult> TypeDeleter(int typeId)
+        {
+            var types = await db_Library.types.ToListAsync();
+            var LibDetails = new LibraryVM();
+
+            LibDetails.BookTypesList = types.Where(t => t.typeId == typeId).ToList();
+
+            return View(LibDetails);
+        }
+        public async Task<ActionResult> BorrowDeleter(int borrowId)
+        {
+            var borrows = await db_Library.borrows.ToListAsync();
+            var student = await db_Library.students.ToListAsync();
+            var book = await db_Library.books.ToListAsync();
+
+            var LibDetails = new LibraryVM();
+
+            LibDetails.BorrowsList = borrows.Where(t => t.borrowId == borrowId).ToList();
+            LibDetails.StudentsList = student.ToList();
+            LibDetails.BooksList = book.ToList();
+
+            return View(LibDetails);
+        }
+
         //All functions bellow are async actions that proccess the data into the database (async edits)
         public async Task<ActionResult> EditAuthor(int authorId, string name, string surname)
         {
@@ -172,6 +207,5 @@ namespace u21632660_HW03.Controllers
                 return RedirectToAction("Maintain", "Home");
             }
         }
-
     }
 }

@@ -34,7 +34,7 @@
                         <td>@author.surname</td>
                         <td>
                             <button type="button" class="btn btn-sm btn-primary" name="/Library/AuthorEditor?authorId=@author.authorId" onclick="editDel(this.name)">Edit</button>
-                            <button type="button" class="btn btn-sm btn-danger" name="/Library/AuthorDel?authorId=@author.authorId">Delete</button>
+                            <button type="button" class="btn btn-sm btn-danger" name="/Library/AuthorDeleter?authorId=@author.authorId" onclick="editDel(this.name)">Delete</button>
                         </td>
                     </tr>
                 }
@@ -62,7 +62,7 @@
                         <td>@type.name</td>
                         <td>
                             <button type="button" class="btn btn-sm btn-primary" name="/Library/TypeEditor?typeId=@type.typeId" onclick="editDel(this.name)">Edit</button>
-                            <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                            <button type="button" class="btn btn-sm btn-danger" name="/Library/TypeDeleter?typeId=@type.typeId" onclick="editDel(this.name)">Delete</button>
                         </td>
                     </tr>
                 }
@@ -111,7 +111,7 @@
                         }
                         <td>
                             <button type="button" class="btn btn-sm btn-primary" name="/Library/BorrowEditor?borrowId=@borrow.borrowId" onclick="editDel(this.name)">Edit</button>
-                            <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                            <button type="button" class="btn btn-sm btn-danger" name="/Library/BorrowDeleter?borrowId=@borrow.borrowId" onclick="editDel(this.name)">Delete</button>
                         </td>
                     </tr>
                 }
@@ -236,7 +236,9 @@
                 </button>
             </div>
             <div class="modal-body" id="editDelBody">
-                    
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>        
         </div>
     </div>

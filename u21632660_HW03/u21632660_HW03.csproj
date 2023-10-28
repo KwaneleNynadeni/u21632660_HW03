@@ -334,6 +334,9 @@
     <Content Include="Views\Library\AuthorEditor.cshtml" />
     <Content Include="Views\Library\TypeEditor.cshtml" />
     <Content Include="Views\Library\BorrowEditor.cshtml" />
+    <Content Include="Views\Library\AuthorDeleter.cshtml" />
+    <Content Include="Views\Library\TypeDeleter.cshtml" />
+    <Content Include="Views\Library\BorrowDeleter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

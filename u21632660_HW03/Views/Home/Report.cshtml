@@ -1,7 +1,44 @@
-﻿
+﻿@model u21632660_HW03.Models.LibraryVM
 @{
     ViewBag.Title = "Report";
+    var students = Model.StudentsList;
+    var books = Model.BooksList;
+    var types = Model.BookTypesList;
+    var borrows = Model.BorrowsList;
+    var authors = Model.AuthorsList;
 }
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<h2>Report</h2>
+<h4>Report</h4>
 
+<div class="card">
+    <div class="card-body">
+        <h6>Borrowing Frequency: Students</h6>
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-primary">Yearly</button>
+            <button type="button" class="btn btn-sm btn-primary">Monthly</button>
+            <button type="button" class="btn btn-sm btn-primary">Daily</button>
+        </div>
+        <hr />
+        <div id="yearly">
+            <h6>Year Report</h6>
+            <p>Chart</p>
+            <canvas id="barChart"></canvas>
+            <table class="table table-sm table-striped" style="font-size: 13px;">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div id="monthly">
+            <h6>Monthly Report</h6>
+        </div>
+        <div id="Daily">
+            <h6>Daily Report</h6>
+        </div>
+    </div>
+</div>

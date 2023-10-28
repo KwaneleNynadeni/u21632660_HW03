@@ -74,9 +74,23 @@ namespace u21632660_HW03.Controllers
             return View(LibDetails);
         }
 
-        public ActionResult Report()
+        public async Task<ActionResult> Report()
         {
-            return View();
+            var student = await db_Library.students.ToListAsync();
+            var borrow = await db_Library.borrows.ToListAsync();
+            var book = await db_Library.books.ToListAsync(); ;
+            var author = await db_Library.authors.ToListAsync();
+            var type = await db_Library.types.ToListAsync();
+
+            var LibDetails = new LibraryVM();
+
+            LibDetails.StudentsList = student;
+            LibDetails.BorrowsList = borrow;
+            LibDetails.BooksList = book;
+            LibDetails.AuthorsList = author;
+            LibDetails.BookTypesList = type;
+
+            return View(LibDetails);
         }
 
         public async Task<ActionResult> CreatStudent(string name, string surname, string birthdate, string gender, string stuClass, int? point)
