@@ -58,8 +58,23 @@
             <div class="col-sm-4">
                 <h5>Number of unreturned books</h5>
                 <h4>@borrows.Where(b => b.broughtDate == null).Count()</h4>
+                <h6>Number of Students with unreturned books</h6>
+                <h4>@borrows.Where(b => b.broughtDate == null).GroupBy(b => b.studentId).Select(g => g.Key).Distinct().Count()</h4>
             </div>
-        </div>       
+        </div> 
+        <hr />
+        <div>
+            <h6>Download report</h6>
+            <div class="input-group">
+                <input type="text" placeholder="file name..." name="filename" class="form-control"/>
+                <select class="form-control">
+                    <option>Select file format</option>
+                    <option>.pdf</option>
+                    <option>.excel</option>
+                </select>
+                <button type="button" class="btn btn-secondary">Download</button>
+            </div>
+        </div>
     </div>
 </div>
 <br />
@@ -67,6 +82,14 @@
     <div class="card-body">
         <h5>Archive List</h5>
         <hr />
+        <table class="table table-sm table-striped" style="font-size: 13px;">
+            <thead class="bg-primary text-light">
+                <tr>
+                    <th>File Name</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
