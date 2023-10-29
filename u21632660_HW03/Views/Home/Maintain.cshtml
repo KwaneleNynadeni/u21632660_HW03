@@ -198,8 +198,8 @@
                 <div class="modal-body">
                     <h5>Borrow details</h5>
                     <div>
-                        <label for="">Student</label>
-                        <select class="form-control form-control-sm" name="student">
+                        <label for="student">Student</label>
+                        <select class="form-control form-control-sm" name="mystudent" id="student">
                             @foreach (var student in students)
                             {
                                 <option value="@student.studentId">@student.name @student.surname</option>
@@ -207,8 +207,8 @@
                         </select>
                     </div>
                     <div>
-                        <label for="">Book</label>
-                        <select class="form-control form-control-sm" name="book">
+                        <label for="book">Book</label>
+                        <select class="form-control form-control-sm" name="mybook" id="book">
                             @foreach (var book in books)
                             {
                                 <option value="@book.bookId">@book.name</option>

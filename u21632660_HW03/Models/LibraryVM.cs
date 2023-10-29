@@ -18,5 +18,6 @@ namespace u21632660_HW03.Models
         public List<borrow> BorrowsList { get; set; }
         public List<student> StudentsList { get; set; }
         public List<book> BooksList { get; set; }
+        public string[] ArchiveFiles { get; set; }
     }
 }

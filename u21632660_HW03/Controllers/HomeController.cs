@@ -76,6 +76,12 @@ namespace u21632660_HW03.Controllers
 
         public async Task<ActionResult> Report()
         {
+            // Replace "ReportArchive" with the path to your report folder
+            string folderPath = Server.MapPath("~/ReportArchive");
+
+            // Get a list of files in the folder
+            string[] fileNames = Directory.GetFiles(folderPath);
+
             var student = await db_Library.students.ToListAsync();
             var borrow = await db_Library.borrows.ToListAsync();
             var book = await db_Library.books.ToListAsync(); ;
@@ -89,6 +95,7 @@ namespace u21632660_HW03.Controllers
             LibDetails.BooksList = book;
             LibDetails.AuthorsList = author;
             LibDetails.BookTypesList = type;
+            LibDetails.ArchiveFiles = fileNames;
 
             return View(LibDetails);
         }
@@ -174,27 +181,29 @@ namespace u21632660_HW03.Controllers
                 return RedirectToAction("Maintain");
             }
         }
-        public async Task<ActionResult> CreatBorrow(int? student, int? book)
+        public async Task<ActionResult> CreatBorrow(int mystudent, int mybook)
         {
             var date = DateTime.Now;
-            var stringDate = date.ToString("yyyy-mm-dd hh:mm:ss");
+            var stringDate = date.ToString("yyyy-MM-dd HH:mm:ss.fff");
+
+            DateTime datenow = Convert.ToDateTime(stringDate);
 
             try
             {
                 db_Library.borrows.Add(new borrow
                 {
-                    studentId = student,
-                    bookId = book,
-                    takenDate = Convert.ToDateTime(stringDate),
+                    studentId = mystudent,
+                    bookId = mybook,
+                    takenDate = datenow,
                     broughtDate = null
                 });
 
                 await db_Library.SaveChangesAsync();
                 return RedirectToAction("Maintain");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return RedirectToAction("Maintain");
+                throw ex;
             }
         }
     }
